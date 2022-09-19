@@ -5,6 +5,7 @@ import CategorySelector from "../components/home/CategorySelector";
 import CategorySearch from "../components/home/CategorySearch";
 import { StyleSheet, View } from "react-native";
 import * as Colors from "../config/colors";
+import EntryList from "../components/home/EntryList";
 
 const HomeScreen = () => {
   const [category, setCategory] = useState("nouns");
@@ -14,6 +15,7 @@ const HomeScreen = () => {
       <SearchBar />
       <CategorySelector category={category} setCategory={setCategory} />
       <CategorySearch category={category} />
+      <EntryList category={category}/>
     </View>
   );
 };

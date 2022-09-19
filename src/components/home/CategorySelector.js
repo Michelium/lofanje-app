@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import * as Colors from "../../config/colors";
-
-const data = [
-  { id: "nouns", title: "nouns" },
-  { id: "adjectives", title: "adjectives" },
-  { id: "toponyms", title: "toponyms" },
-  { id: "demonyms", title: "demonyms" },
-  { id: "verbs", title: "verbs" },
-  { id: "articles", title: "articles" },
-  { id: "pronouns", title: "pronouns" },
-];
+import axiosInstance from "../../helpers/axios-helper";
 
 const CategorySelector = ({ category, setCategory }) => {
+  const [categories, setCategories] = useState([]);
+
+  const getEntries = async () => {
+    try {
+      const response = await axiosInstance.get(`api/get-categories`);
+      console.log(response.data);
+      setCategories(response.data);
+    } catch (error) {
+      if (axiosInstance.isCancel(error)) {
+        console.log("Data fetching cancelled");
+      } else {
+        alert("Something went wrong.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getEntries();
+  }, []);
+
   const Item = ({ title }) => (
     <TouchableOpacity
       onPress={() => {
@@ -25,11 +36,11 @@ const CategorySelector = ({ category, setCategory }) => {
     </TouchableOpacity>
   );
 
-  const renderItem = ({ item }) => <Item title={item.title} />;
+  const renderItem = ({ item }) => <Item title={item} />;
 
   return (
     <View style={styles.container}>
-      <FlatList style={{paddingLeft: 11}} showsHorizontalScrollIndicator={false} horizontal data={data} renderItem={renderItem} keyExtractor={(item) => item.id} />
+      <FlatList style={{ paddingLeft: 11 }} showsHorizontalScrollIndicator={false} horizontal data={categories} renderItem={renderItem} keyExtractor={(category) => category} />
     </View>
   );
 };
