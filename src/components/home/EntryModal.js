@@ -10,7 +10,7 @@ const WIDTH_MODAL = Dimensions.get("window").width - 80;
 const HEIGHT_MODAL = Dimensions.get("window").height - 200;
 
 const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
-  const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
   return (
     <TouchableWithoutFeedback onPress={() => setModalVisible(false)} style={styles.container}>
@@ -21,16 +21,14 @@ const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
           </View>
           <Divider />
           <View style={styles.body}>
-            <ScrollView>
             {fields.map((field, key) => {
               return (
-                <View style={styles.fieldRow}>
+                <View style={styles.fieldRow} key={key}>
                   <Text style={styles.label}>{humanFields[key]}:</Text>
                   <Text>{entry[camelToSnakeCase(field)]}</Text>
                 </View>
               );
             })}
-            </ScrollView>
             <Button onPress={() => setModalVisible(false)} title="close" style={styles.button} />
           </View>
         </View>
@@ -92,7 +90,7 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.dark_grey,
     fontSize: 15,
-  }
+  },
 });
 
 export default EntryModal;
