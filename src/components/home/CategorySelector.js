@@ -8,7 +8,7 @@ const CategorySelector = ({ category, setCategory }) => {
 
   const getEntries = async () => {
     try {
-      const response = await axiosInstance.get(`api/get-categories`);
+      const response = await axiosInstance.get(`/categories`);
       console.log(response.data);
       setCategories(response.data);
     } catch (error) {

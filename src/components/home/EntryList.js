@@ -11,7 +11,7 @@ const EntryList = ({ category }) => {
 
   const getEntries = async () => {
     try {
-      const response = await axiosInstance.get(`api/get-entries/${category}`);
+      const response = await axiosInstance.get(`/entries/${category}`);
       setEntries(response.data);
     } catch (error) {
       if (axiosInstance.isCancel(error)) {
