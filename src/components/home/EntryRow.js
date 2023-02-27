@@ -1,16 +1,21 @@
 import { Text } from "@ui-kitten/components";
-import React from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
 import Divider from "../../common/Divider";
 import * as Colors from "../../config/colors";
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from "@expo/vector-icons";
 
-const EntryRow = ({ category, entry }) => {
+const EntryRow = ({ category, entry, setModalVisible, setModalEntry }) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        setModalVisible(true);
+        setModalEntry(entry);
+      }}
+    >
       <View style={styles.container}>
         <Text category="p1" style={styles.title}>
-          {category !== 'verbs' ? entry.base_form : entry.infinitive}
+          {category !== "verbs" ? entry.base_form : entry.infinitive}
         </Text>
         <AntDesign name="eyeo" size={20} color={Colors.primary} />
       </View>
@@ -21,8 +26,8 @@ const EntryRow = ({ category, entry }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 13,
   },
   title: {
