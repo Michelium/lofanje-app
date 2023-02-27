@@ -1,16 +1,17 @@
 import { Text } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, FlatList, Dimensions, ScrollView } from "react-native";
 import Divider from "../../common/Divider";
 import * as Colors from "../../config/colors";
-import { AntDesign } from "@expo/vector-icons";
 import Button from "../../common/Button";
 import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 
 const WIDTH_MODAL = Dimensions.get("window").width - 80;
-const HEIGHT_MODAL = Dimensions.get("window").height - 400;
+const HEIGHT_MODAL = Dimensions.get("window").height - 200;
 
-const EntryModal = ({ entry, setModalVisible, modalVisible }) => {
+const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
+  const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
   return (
     <TouchableWithoutFeedback onPress={() => setModalVisible(false)} style={styles.container}>
       <View style={styles.modal}>
@@ -20,12 +21,17 @@ const EntryModal = ({ entry, setModalVisible, modalVisible }) => {
           </View>
           <Divider />
           <View style={styles.body}>
-            <FlatList />
-            <Button
-              onPress={() => setModalVisible(false)}
-              title="close"
-              style={styles.button}
-            />
+            <ScrollView>
+            {fields.map((field, key) => {
+              return (
+                <View style={styles.fieldRow}>
+                  <Text style={styles.label}>{humanFields[key]}:</Text>
+                  <Text>{entry[camelToSnakeCase(field)]}</Text>
+                </View>
+              );
+            })}
+            </ScrollView>
+            <Button onPress={() => setModalVisible(false)} title="close" style={styles.button} />
           </View>
         </View>
       </View>
@@ -80,6 +86,13 @@ const styles = StyleSheet.create({
   closeButton: {
     alignSelf: "center",
   },
+  fieldRow: {
+    marginBottom: 10,
+  },
+  label: {
+    color: Colors.dark_grey,
+    fontSize: 15,
+  }
 });
 
 export default EntryModal;
