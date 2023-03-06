@@ -9,6 +9,7 @@ import EntryModal from "./EntryModal";
 
 const EntryList = ({ category }) => {
   const [entries, setEntries] = useState([]);
+  const [entriesLoading, setEntriesLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalEntry, setModalEntry] = useState([]);
   const [fields, setFields] = useState([]);
@@ -18,6 +19,7 @@ const EntryList = ({ category }) => {
     try {
       const response = await axiosInstance.get(`/entries/${category}`);
       setEntries(response.data);
+      setEntriesLoading(false);
     } catch (error) {
       if (axiosInstance.isCancel(error)) {
         console.log("Data fetching cancelled");
@@ -52,20 +54,27 @@ const EntryList = ({ category }) => {
   };
 
   useEffect(() => {
+    setEntriesLoading(true);
     getEntries();
     getFields();
   }, [category]);
 
   return (
     <View style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} propagateSwipe={true} onBackButtonPress={() => setModalVisible(false)} onBackdropPress={() => setModalVisible(false)} onSwipe={() => setModalVisible(false)} onSwipeThreshold={20} >
+      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} propagateSwipe={true} onBackButtonPress={() => setModalVisible(false)} onBackdropPress={() => setModalVisible(false)} onSwipe={() => setModalVisible(false)} onSwipeThreshold={20}>
         <EntryModal setModalVisible={setModalVisible} modalVisible={modalVisible} entry={modalEntry} fields={fields} humanFields={humanFields} />
       </Modal>
       <Text category="h4" style={styles.title}>
         {category !== "verbs" ? "base form" : "infinitive"}
       </Text>
       <Divider />
-      <FlatList data={entries} renderItem={(entry) => <EntryRow category={category} entry={entry.item} setModalVisible={setModalVisible} setModalEntry={setModalEntry} />} keyExtractor={(item) => item.id} showsVerticalScrollIndicator={false} />
+      {entriesLoading === true ? (
+        <>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </>
+      ) : (
+        <FlatList data={entries} renderItem={(entry) => <EntryRow category={category} entry={entry.item} setModalVisible={setModalVisible} setModalEntry={setModalEntry} />} keyExtractor={(item) => item.id} showsVerticalScrollIndicator={false} />
+      )}
     </View>
   );
 };
