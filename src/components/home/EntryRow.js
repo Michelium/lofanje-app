@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.dark,
+    maxWidth: '90%',
   },
 });
 

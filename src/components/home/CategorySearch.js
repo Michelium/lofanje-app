@@ -4,10 +4,19 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Button from "../../common/Button";
 import * as Colors from "../../config/colors";
 
-const CategorySearch = ({ category }) => {
+const CategorySearch = ({ category, setCategorySearchInput }) => {
   return (
     <View style={styles.container}>
-      <Input style={styles.input} placeholder={"search " + category} autoCapitalize="none" returnKeyType="search" textStyle={{ fontWeight: "500" }} />
+      <Input
+        style={styles.input}
+        placeholder={"search " + category}
+        onChangeText={(input) => {
+          setCategorySearchInput(input);
+        }}
+        autoCapitalize="none"
+        returnKeyType="search"
+        textStyle={{ fontWeight: "500" }}
+      />
       <Button title="search" style={styles.button} />
     </View>
   );

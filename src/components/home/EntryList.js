@@ -7,7 +7,7 @@ import axiosInstance from "../../helpers/axios-helper";
 import EntryRow from "./EntryRow";
 import EntryModal from "./EntryModal";
 
-const EntryList = ({ category }) => {
+const EntryList = ({ category, searchInput }) => {
   const [entries, setEntries] = useState([]);
   const [entriesLoading, setEntriesLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,7 +17,7 @@ const EntryList = ({ category }) => {
 
   const getEntries = async () => {
     try {
-      const response = await axiosInstance.get(`/entries/${category}`);
+      const response = await axiosInstance.get(`/entries/${category}?keyword=${searchInput}`);
       setEntries(response.data);
       setEntriesLoading(false);
     } catch (error) {
@@ -57,7 +57,7 @@ const EntryList = ({ category }) => {
     setEntriesLoading(true);
     getEntries();
     getFields();
-  }, [category]);
+  }, [category, searchInput]);
 
   return (
     <View style={styles.container}>
