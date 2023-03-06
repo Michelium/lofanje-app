@@ -1,6 +1,6 @@
 import { Text } from "@ui-kitten/components";
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, FlatList, Dimensions, ScrollView, TouchableOpacity } from "react-native";
 import Divider from "../../common/Divider";
 import * as Colors from "../../config/colors";
 import Button from "../../common/Button";
@@ -21,14 +21,18 @@ const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
           </View>
           <Divider />
           <View style={styles.body}>
-            {fields.map((field, key) => {
-              return (
-                <View style={styles.fieldRow} key={key}>
-                  <Text style={styles.label}>{humanFields[key]}:</Text>
-                  <Text>{entry[camelToSnakeCase(field)]}</Text>
-                </View>
-              );
-            })}
+            <ScrollView>
+              <TouchableOpacity>
+                {fields.map((field, key) => {
+                  return (
+                    <View style={styles.fieldRow} key={key}>
+                      <Text style={styles.label}>{humanFields[key]}:</Text>
+                      <Text>{entry[camelToSnakeCase(field)]}</Text>
+                    </View>
+                  );
+                })}
+              </TouchableOpacity>
+            </ScrollView>
             <Button onPress={() => setModalVisible(false)} title="close" style={styles.button} />
           </View>
         </View>

@@ -18,7 +18,6 @@ const EntryList = ({ category }) => {
     try {
       const response = await axiosInstance.get(`/entries/${category}`);
       setEntries(response.data);
-
     } catch (error) {
       if (axiosInstance.isCancel(error)) {
         console.log("Data fetching cancelled");
@@ -59,7 +58,7 @@ const EntryList = ({ category }) => {
 
   return (
     <View style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} propagateSwipe={true} onBackButtonPress={() => setModalVisible(false)} onBackdropPress={() => setModalVisible(false)} onSwipe={() => setModalVisible(false)} onSwipeThreshold={20} >
         <EntryModal setModalVisible={setModalVisible} modalVisible={modalVisible} entry={modalEntry} fields={fields} humanFields={humanFields} />
       </Modal>
       <Text category="h4" style={styles.title}>
