@@ -22,7 +22,7 @@ const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
           <Divider />
           <View style={styles.body}>
             <ScrollView>
-              <TouchableOpacity>
+              <TouchableWithoutFeedback>
                 {fields.map((field, key) => {
                   return (
                     <View style={styles.fieldRow} key={key}>
@@ -31,7 +31,7 @@ const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
                     </View>
                   );
                 })}
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             </ScrollView>
             <Button onPress={() => setModalVisible(false)} title="close" style={styles.button} />
           </View>
