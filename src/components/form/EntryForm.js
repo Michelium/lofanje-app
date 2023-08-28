@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import Button from "../../common/Button";
 import * as Colors from "../../config/colors";
-import FormRow from "./FormRow";
 import axiosInstance from "../../helpers/axios-helper";
-import { showMessage, hideMessage } from 'react-native-flash-message';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import TextInput from "../../common/form/TextInput";
+import SelectInput from "../../common/form/SelectInput";
 
 const EntryForm = ({ category }) => {
   const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
@@ -12,29 +13,23 @@ const EntryForm = ({ category }) => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [fields, setFields] = useState(null);
-  const [humanFields, setHumanFields] = useState(null);  
 
   const getFields = async () => {
     try {
       const response = await axiosInstance.get(`/fields?category=${category}`);
-      const responseHumanReadable = await axiosInstance.get(`/fields?category=${category}&human_readable=1`);
-      
       setFields(response.data);
-      setHumanFields(responseHumanReadable.data);
-  
+
       const value = response.data.reduce((acc, curr) => {
-        acc[curr] = null;
+        acc[curr.name] = null;
         return acc;
       }, {});
-      
+
       setFormData(value);
-      // console.log(fields);
-      // console.log(humanFields);
     } catch (error) {
       if (axiosInstance.isCancel(error)) {
-        console.log("Data fetching cancelled");
+        console.error("Data fetching cancelled");
       } else {
-        alert("Something went wrong.");
+        showMessage({ message: "Something went wrong retrieving the form fields.", type: "danger" });
       }
     }
   };
@@ -44,13 +39,10 @@ const EntryForm = ({ category }) => {
   };
 
   const handleFormSubmit = async () => {
-    const allFieldsNull = Object.values(formData).every(value => value === null);
+    const allFieldsNull = Object.values(formData).every((value) => value === null);
 
     if (allFieldsNull) {
-      showMessage({
-        message: 'Please fill in the form fields.',
-        type: 'danger',
-      });
+      showMessage({ message: "Please fill in the form fields.", type: "danger" });
       return;
     }
 
@@ -61,27 +53,29 @@ const EntryForm = ({ category }) => {
     for (const key in formData) {
       convertedData[camelToSnakeCase(key)] = formData[key];
     }
-  
+
     const data = {
       category: category, // Add the current category to the data object
-      ...convertedData,   // Spread the converted data
+      ...convertedData, // Spread the converted data
     };
 
     try {
       const response = await axiosInstance.post("/entries", data);
       console.log("Response from server:", response.data);
 
-      showMessage({
-        message: 'Entry added successfully.',
-        type: 'success',
-      });
+      showMessage({ message: "Entry added successfully.", type: "success" });
+
+      // Reset the form after successfull submit
+      const value = fields.reduce((acc, curr) => {
+        acc[curr.name] = null;
+        return acc;
+      }, {});
+
+      setFormData(value);
     } catch (error) {
       console.error("Error submitting form:", error);
 
-      showMessage({
-        message: 'Something went wrong!',
-        type: 'danger',
-      });
+      showMessage({ message: "Something went wrong!", type: "danger" });
     } finally {
       setSubmitLoading(false);
     }
@@ -92,15 +86,24 @@ const EntryForm = ({ category }) => {
     getFields();
   }, [category]);
 
+  const renderFormField = (field) => {
+    if (field === null || field === undefined) return null;
+    const { name, type, label, required, choices } = field;
+
+    if (type === "text") {
+      return <TextInput key={name} field={name} label={label} value={formData[name]} updateFormData={updateFormData}  required={required} />;
+    } else if (type === "choice") {
+      return <SelectInput key={name} field={name} label={label} value={formData[name]} updateFormData={updateFormData} choices={choices} />;
+    }
+
+    return null;
+  };
+
   return (
     <View style={styles.container}>
-      {fields !== null && humanFields !== null && submitLoading === false ? (
+      {fields !== null && submitLoading === false ? (
         <>
-          <ScrollView>
-            {fields.map((field, iteration) => {
-              return <FormRow label={humanFields[iteration]} updateFormData={updateFormData} key={iteration} field={field} />;
-            })}
-          </ScrollView>
+          <ScrollView>{fields.map((field) => renderFormField(field))}</ScrollView>
           <Button title="submit" onPress={() => handleFormSubmit()} />
         </>
       ) : (
@@ -118,18 +121,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: "center",
-  },
-  input: {
-    backgroundColor: Colors.light_grey,
-    borderColor: "none",
-    height: 40,
-    padding: 10,
-    borderRadius: 4,
-  },
-  label: {
-    color: Colors.primary,
-    margin: 20,
-    marginLeft: 0,
   },
 });
 
