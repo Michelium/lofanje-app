@@ -86,9 +86,6 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontWeight: "500",
   },
-  closeButton: {
-    alignSelf: "center",
-  },
   fieldRow: {
     marginBottom: 10,
   },
