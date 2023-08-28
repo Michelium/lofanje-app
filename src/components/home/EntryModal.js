@@ -1,6 +1,6 @@
 import { Text } from "@ui-kitten/components";
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Dimensions, ScrollView, TouchableOpacity } from "react-native";
+import React from "react";
+import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import Divider from "../../common/Divider";
 import * as Colors from "../../config/colors";
 import Button from "../../common/Button";
@@ -9,7 +9,7 @@ import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 const WIDTH_MODAL = Dimensions.get("window").width - 80;
 const HEIGHT_MODAL = Dimensions.get("window").height - 200;
 
-const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
+const EntryModal = ({ entry, setModalVisible, fields }) => {
   const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
   return (
@@ -23,11 +23,12 @@ const EntryModal = ({ entry, setModalVisible, fields, humanFields }) => {
           <View style={styles.body}>
             <ScrollView>
               <TouchableWithoutFeedback>
-                {fields.map((field, key) => {
+                {fields.map((field) => {
+                  console.log(field, entry);
                   return (
-                    <View style={styles.fieldRow} key={key}>
-                      <Text style={styles.label}>{humanFields[key]}:</Text>
-                      <Text>{entry[camelToSnakeCase(field)]}</Text>
+                    <View style={styles.fieldRow} key={field.name}>
+                      <Text style={styles.label}>{field.label}:</Text>
+                      <Text>{entry[camelToSnakeCase(field.name)]}</Text>
                     </View>
                   );
                 })}

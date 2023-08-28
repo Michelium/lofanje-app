@@ -16,7 +16,6 @@ const EntryList = ({ category, searchInput }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalEntry, setModalEntry] = useState([]);
   const [fields, setFields] = useState([]);
-  const [humanFields, setHumanFields] = useState([]);
 
   const getEntries = async () => {
     try {
@@ -43,17 +42,6 @@ const EntryList = ({ category, searchInput }) => {
         alert("Something went wrong.");
       }
     }
-
-    try {
-      const responseHumanFields = await axiosInstance.get(`/fields?category=${category}&human_readable=1`);
-      setHumanFields(responseHumanFields.data);
-    } catch (error) {
-      if (axiosInstance.isCancel(error)) {
-        console.log("Data fetching cancelled");
-      } else {
-        alert("Something went wrong.");
-      }
-    }
   };
 
   useEffect(() => {
@@ -65,7 +53,7 @@ const EntryList = ({ category, searchInput }) => {
   return (
     <View style={styles.container}>
       <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} propagateSwipe={true} onBackButtonPress={() => setModalVisible(false)} onBackdropPress={() => setModalVisible(false)} onSwipe={() => setModalVisible(false)} onSwipeThreshold={20}>
-        <EntryModal setModalVisible={setModalVisible} modalVisible={modalVisible} entry={modalEntry} fields={fields} humanFields={humanFields} />
+        <EntryModal setModalVisible={setModalVisible} modalVisible={modalVisible} entry={modalEntry} fields={fields} />
       </Modal>
       <View style={styles.tableHeader}>
         <Text category="h4" style={styles.title}>
