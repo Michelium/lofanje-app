@@ -9,24 +9,29 @@ import * as Colors from "./src/config/colors";
 import FormScreen from "./src/screens/FormScreen";
 import FlashMessage from "react-native-flash-message";
 import { StyleSheet } from "react-native";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
-    <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }} customMapping={mapping}>
+    <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }} customMapping={mapping}>
       <NavigationContainer>
+        <StatusBar
+          backgroundColor={Colors.background}
+          style="light"
+        />
         <FlashMessage position="top" statusBarHeight={40} style={styles.flashMessage} />
         <Tab.Navigator
           screenOptions={{
             headerTitleAlign: "left",
             headerStyle: {
-              backgroundColor: Colors.primary,
-              borderBottomColor: Colors.primary,
+              backgroundColor: Colors.background,
               shadowOffset: { width: 0, height: 0 },
             },
             headerTitleStyle: {
-              color: Colors.white,
+              color: Colors.text,
               fontWeight: "600",
               textAlign: "left",
             },
@@ -47,6 +52,13 @@ const App = () => {
             component={FormScreen}
             options={{
               title: "lofanje",
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              title: "settings",
             }}
           />
         </Tab.Navigator>

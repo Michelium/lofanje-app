@@ -9,8 +9,8 @@ const Header = ({category}) => {
 
   return (
     <View style={styles.container}>
-      <Button title="cancel" style={styles.button} btnColor={Colors.success} onPress={() => {navigation.goBack()}} />
       <Text style={styles.title}>category: <Text style={{fontWeight: 600}}>{category}</Text></Text>
+      <Button title="cancel" style={styles.button} btnColor={Colors.success} onPress={() => {navigation.goBack()}} />
     </View>
   );
 };
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light_background,
     paddingTop: 15,
     paddingBottom: 15,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   input: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   title: {
-    color: Colors.primary,
+    color: Colors.text,
     marginLeft: 10,
   }
 });

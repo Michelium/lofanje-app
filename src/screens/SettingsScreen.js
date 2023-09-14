@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import * as Colors from "../config/colors";
 import EntryList from "../components/home/EntryList";
 
-const HomeScreen = () => {
+const SettingsScreen = () => {
   const [category, setCategory] = useState("nouns");
   const [categorySearchInput, setCategorySearchInput] = useState('');
 
@@ -17,7 +17,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <SearchBar /> */}
+      <SearchBar />
       <CategorySelector category={category} setCategory={setCategory} />
       <CategorySearch category={category} setCategorySearchInput={setCategorySearchInput} />
       <EntryList category={category} searchInput={categorySearchInput} />
@@ -28,8 +28,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "white",
   },
 });
 
-export default HomeScreen;
+export default SettingsScreen;

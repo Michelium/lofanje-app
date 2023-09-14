@@ -51,9 +51,7 @@ const styles = StyleSheet.create({
   modal: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.light_background,
-    borderColor: Colors.light_grey,
-    borderWidth: 3,
+    backgroundColor: Colors.card,
     borderRadius: 8,
     width: WIDTH_MODAL,
     height: HEIGHT_MODAL,
@@ -83,14 +81,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: Colors.primary,
+    color: Colors.text,
     fontWeight: "500",
   },
   fieldRow: {
     marginBottom: 10,
   },
   label: {
-    color: Colors.dark_grey,
+    color: Colors.secondaryText,
     fontSize: 15,
   },
 });

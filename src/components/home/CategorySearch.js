@@ -10,6 +10,7 @@ const CategorySearch = ({ category, setCategorySearchInput }) => {
       <Input
         style={styles.input}
         placeholder={"search " + category}
+        placeholderTextColor={Colors.secondary}
         onChangeText={(input) => {
           setCategorySearchInput(input);
         }}
@@ -17,7 +18,7 @@ const CategorySearch = ({ category, setCategorySearchInput }) => {
         returnKeyType="search"
         textStyle={{ fontWeight: "500" }}
       />
-      <Button title="search" style={styles.button} />
+      {/* <Button title="search" style={styles.button} /> */}
     </View>
   );
 };
@@ -25,7 +26,7 @@ const CategorySearch = ({ category, setCategorySearchInput }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: Colors.light_background,
+    backgroundColor: Colors.background,
     paddingTop: 5,
     paddingBottom: 15,
     paddingHorizontal: 16,
@@ -33,8 +34,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 2,
     paddingRight: 10,
-    borderRadius: 8,
-    backgroundColor: Colors.white,
+    borderRadius: 15,
+    backgroundColor: Colors.card,
     borderWidth: 0,
   },
   button: {

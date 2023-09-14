@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    color: Colors.dark,
+    color: Colors.secondaryText,
     marginBottom: 3,
   },
   input: {

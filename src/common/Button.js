@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.buttonBackground,
     borderRadius: 10,
     paddingHorizontal: 20,
     height: 30,
     width: 'auto',
   },
   text: {
-    color: Colors.white,
+    color: Colors.text,
   },
 });
 

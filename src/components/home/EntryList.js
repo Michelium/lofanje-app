@@ -81,9 +81,12 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.secondary,
+    paddingVertical: 5,
   },
   title: {
-    color: Colors.primary,
+    color: Colors.text,
     flex: 2,
   },
   button: {

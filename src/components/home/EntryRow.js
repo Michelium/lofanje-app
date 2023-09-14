@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     marginVertical: 13,
   },
   title: {
-    color: Colors.dark,
+    color: Colors.text,
     maxWidth: '90%',
   },
 });

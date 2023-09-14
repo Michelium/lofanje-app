@@ -46,26 +46,29 @@ const CategorySelector = ({ category, setCategory }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.light_background,
+    backgroundColor: Colors.background,
   },
   item: {
     paddingVertical: 7,
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     borderRadius: 50,
     marginHorizontal: 5,
     marginVertical: 15,
     borderWidth: 1,
-    borderColor: Colors.dark_grey,
+    backgroundColor: Colors.secondary,
   },
   itemActive: {
     backgroundColor: Colors.dark,
+    borderColor: Colors.border,
   },
   title: {
     fontSize: 16,
-    color: Colors.dark_grey,
+    color: Colors.text,
+    opacity: 0.8,
   },
   titleActive: {
-    color: Colors.white,
+    color: Colors.text,
+    opacity: 1,
   },
 });
 
