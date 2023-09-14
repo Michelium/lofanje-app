@@ -7,7 +7,7 @@ import axiosInstance from "../../helpers/axios-helper";
 import EntryRow from "./EntryRow";
 import EntryModal from "./EntryModal";
 import Button from "../../common/Button";
-import { useNavigation, useFocusEffect } from '@react-navigation/core';
+import { useNavigation, useFocusEffect } from "@react-navigation/core";
 
 const EntryList = ({ category, searchInput }) => {
   const navigation = useNavigation();
@@ -44,11 +44,15 @@ const EntryList = ({ category, searchInput }) => {
     }
   };
 
+  const reloadList = () => {
+    setEntriesLoading(true);
+    getEntries();
+    getFields();
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      setEntriesLoading(true);
-      getEntries();
-      getFields();
+      reloadList();
       return () => {
         // Any cleanup operation if needed when screen goes out of focus
       };
@@ -64,7 +68,7 @@ const EntryList = ({ category, searchInput }) => {
         <Text category="h4" style={styles.title}>
           {category !== "verbs" ? "base form" : "infinitive"}
         </Text>
-        <Button title='new entry' style={styles.button} onPress={() => navigation.navigate('Form', {category: category})} />
+        <Button title="new entry" style={styles.button} onPress={() => navigation.navigate("Form", { category: category })} />
       </View>
       <Divider />
       {entriesLoading === true ? (
@@ -72,7 +76,7 @@ const EntryList = ({ category, searchInput }) => {
           <ActivityIndicator size="large" color={Colors.primary} />
         </>
       ) : (
-        <FlatList data={entries} renderItem={(entry) => <EntryRow category={category} entry={entry.item} setModalVisible={setModalVisible} setModalEntry={setModalEntry} />} keyExtractor={(item) => item.id} showsVerticalScrollIndicator={false} />
+        <FlatList data={entries} renderItem={(entry) => <EntryRow category={category} entry={entry.item} setModalVisible={setModalVisible} setModalEntry={setModalEntry} reloadList={reloadList} />} keyExtractor={(item) => item.id} showsVerticalScrollIndicator={false} />
       )}
     </View>
   );
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   tableHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 3,
     borderBottomColor: Colors.secondary,
     paddingVertical: 5,
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   button: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 });
 

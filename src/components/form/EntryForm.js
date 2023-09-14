@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, ActivityIndicator, Text } from "react-nat
 import Button from "../../common/Button";
 import * as Colors from "../../config/colors";
 import axiosInstance from "../../helpers/axios-helper";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 import TextInput from "../../common/form/TextInput";
 import SelectInput from "../../common/form/SelectInput";
 import { useNavigation } from "@react-navigation/core";
@@ -60,13 +60,12 @@ const EntryForm = ({ category, entry }) => {
       let response;
       if (entry) {
         // if entry is defined, use PUT to update
-        response = await axiosInstance.put("/entries", data); // Assuming your entry object has an 'id' field.
+        response = await axiosInstance.put("/entries", data);
       } else {
         // Otherwise, use POST to create a new entry
         response = await axiosInstance.post("/entries", data);
       }
 
-      // const response = await axiosInstance.post("/entries", data);
       console.log("Response from server:", response.data);
 
       showMessage({
@@ -129,16 +128,23 @@ const EntryForm = ({ category, entry }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          category: <Text style={{ fontWeight: 600 }}>{category}</Text>
-        </Text>
-        <Button title="submit" style={styles.button} btnColor={Colors.success} onPress={handleFormSubmit} />
-      </View>
       {isDataLoaded ? (
         <>
+          <View style={styles.header}>
+            <Text style={styles.title}>
+              category: <Text style={{ fontWeight: 600 }}>{category}</Text>
+            </Text>
+            <Button title="submit" style={styles.button} btnColor={Colors.success} onPress={handleFormSubmit} />
+          </View>
           <ScrollView>{fields.map(renderFormField)}</ScrollView>
-      <Button title="cancel" style={styles.backButton} btnColor={Colors.success} onPress={() => {navigation.goBack()}} />
+          <Button
+            title="cancel"
+            style={styles.backButton}
+            btnColor={Colors.success}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
         </>
       ) : (
         <ActivityIndicator size="large" color={Colors.primary} />

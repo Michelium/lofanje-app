@@ -1,34 +1,75 @@
 import { Text } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
-import Divider from "../../common/Divider";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import * as Colors from "../../config/colors";
 import { Foundation } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import axiosInstance from "../../helpers/axios-helper";
+import Dialog from "react-native-dialog";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
-const EntryRow = ({ category, entry, setModalVisible, setModalEntry }) => {
+const EntryRow = ({ category, entry, setModalVisible, setModalEntry, reloadList }) => {
   const navigation = useNavigation();
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+
+  const handleDeletePress = (id) => {
+    deleteEntry(id); // Actual deleting of the entry
+    setDeleteDialogVisible(false); // Close the dialog after deleting
+  };
+
+  const deleteEntry = async (id) => {
+    try {
+      response = await axiosInstance.delete(`/entries/${id}`);
+
+      console.log("Response from server:", response);
+
+      showMessage({
+        message: "entry deleted successfully",
+        type: "success",
+      });
+      reloadList();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+
+      showMessage({ message: "Something went wrong!", type: "danger" });
+    }
+  };
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        setModalVisible(true);
-        setModalEntry(entry);
-      }}
-    >
-      <View style={styles.container}>
-        <Text category="p1" style={styles.title}>
-          {category !== "verbs" ? entry.base_form : entry.infinitive}
-        </Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity hitSlop={styles.hitSlop} onPress={() => navigation.navigate("Form", { category: category, entry: entry })}>
-            <Foundation style={styles.buttonItem} name="pencil" size={20} color={Colors.primary} />
-          </TouchableOpacity>
-          <Feather style={styles.buttonItem} name="trash-2" size={20} color={Colors.primary} />
+    <>
+      <Dialog.Container visible={deleteDialogVisible} contentStyle={styles.dialogContainer}>
+        <Dialog.Title style={styles.dialogTitle}>Delete entry</Dialog.Title>
+        <Dialog.Description style={styles.dialogDescription}>
+          <Text style={styles.dialogEntryDescription}>
+            {category !== "verbs" ? entry.base_form : entry.infinitive} {"\n"}
+          </Text>
+        </Dialog.Description>
+        <Dialog.Button label="Cancel" style={styles.dialogButton} onPress={() => setDeleteDialogVisible(false)} />
+        <Dialog.Button label="Delete" style={styles.dialogButton} onPress={() => handleDeletePress(entry.id)} />
+      </Dialog.Container>
+
+      <TouchableOpacity
+        onPress={() => {
+          setModalVisible(true);
+          setModalEntry(entry);
+        }}
+      >
+        <View style={styles.container}>
+          <Text category="p1" style={styles.title}>
+            {category !== "verbs" ? entry.base_form : entry.infinitive}
+          </Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.buttonItem} hitSlop={styles.hitSlop} onPress={() => navigation.navigate("Form", { category: category, entry: entry })}>
+              <Foundation name="pencil" size={20} color={Colors.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonItem} hitSlop={styles.hitSlop} onPress={() => setDeleteDialogVisible(true)}>
+              <Feather name="trash-2" size={20} color={Colors.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -41,20 +82,33 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    alignSelf: "center",
   },
   buttonItem: {
-    paddingLeft: 20,
+    paddingHorizontal: 15,
   },
   title: {
     color: Colors.text,
-    maxWidth: "90%",
+    maxWidth: "80%",
   },
   hitSlop: {
     top: 25,
     bottom: 25,
-    left: 25,
-    right: 25,
-  }
+    left: 0,
+    right: 0,
+  },
+  dialogContainer: {
+    backgroundColor: Colors.card,
+  },
+  dialogTitle: {
+    color: Colors.text,
+  },
+  dialogDescription: {
+    color: Colors.secondary,
+  },
+  dialogButton: {
+    color: Colors.buttonBackground,
+  },
 });
 
 export default EntryRow;
