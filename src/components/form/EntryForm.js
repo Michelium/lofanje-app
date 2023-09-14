@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ScrollView, ActivityIndicator, Text } from "react-native";
 import Button from "../../common/Button";
 import * as Colors from "../../config/colors";
 import axiosInstance from "../../helpers/axios-helper";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import TextInput from "../../common/form/TextInput";
 import SelectInput from "../../common/form/SelectInput";
+import { useNavigation } from "@react-navigation/core";
+import Header from "./Header";
 
-const EntryForm = ({ category }) => {
+const EntryForm = ({ category, entry }) => {
+  const navigation = useNavigation();
+
   const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -18,13 +22,6 @@ const EntryForm = ({ category }) => {
     try {
       const response = await axiosInstance.get(`/fields?category=${category}`);
       setFields(response.data);
-
-      const value = response.data.reduce((acc, curr) => {
-        acc[curr.name] = null;
-        return acc;
-      }, {});
-
-      setFormData(value);
     } catch (error) {
       if (axiosInstance.isCancel(error)) {
         console.error("Data fetching cancelled");
@@ -60,12 +57,28 @@ const EntryForm = ({ category }) => {
     };
 
     try {
-      const response = await axiosInstance.post("/entries", data);
+      let response;
+      if (entry) {
+        // if entry is defined, use PUT to update
+        response = await axiosInstance.put("/entries", data); // Assuming your entry object has an 'id' field.
+      } else {
+        // Otherwise, use POST to create a new entry
+        response = await axiosInstance.post("/entries", data);
+      }
+
+      // const response = await axiosInstance.post("/entries", data);
       console.log("Response from server:", response.data);
 
-      showMessage({ message: "Entry added successfully.", type: "success" });
+      showMessage({
+        message: entry ? "Entry updated successfully." : "Entry added successfully.",
+        type: "success",
+      });
 
-      // Reset the form after successfull submit
+      if (entry) {
+        navigation.navigate("Home", { category: category });
+      }
+
+      // Reset the form after successful submit
       const value = fields.reduce((acc, curr) => {
         acc[curr.name] = null;
         return acc;
@@ -73,7 +86,7 @@ const EntryForm = ({ category }) => {
 
       setFormData(value);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting form:", error, data);
 
       showMessage({ message: "Something went wrong!", type: "danger" });
     } finally {
@@ -82,29 +95,50 @@ const EntryForm = ({ category }) => {
   };
 
   useEffect(() => {
-    setFormData({});
+    // Fill form data if entry is given so it becomes an update form
+    if (entry) {
+      const newFormData = {};
+      if (fields) {
+        newFormData["id"] = entry["id"];
+        fields.map((field) => {
+          if (entry[camelToSnakeCase(field.name)]) {
+            newFormData[field.name] = entry[camelToSnakeCase(field.name)];
+          }
+        });
+      }
+
+      setFormData(newFormData);
+    } else {
+      setFormData({});
+    }
     getFields();
-  }, [category]);
+  }, [category, entry]);
 
   const renderFormField = (field) => {
-    if (field === null || field === undefined) return null;
     const { name, type, label, required, choices } = field;
 
     if (type === "text") {
-      return <TextInput key={name} field={name} label={label} value={formData[name]} updateFormData={updateFormData}  required={required} />;
+      return <TextInput key={name} field={name} label={label} value={formData[name]} updateFormData={updateFormData} required={required} />;
     } else if (type === "choice") {
       return <SelectInput key={name} field={name} label={label} value={formData[name]} updateFormData={updateFormData} choices={choices} />;
     }
-
     return null;
   };
 
+  const isDataLoaded = fields && !submitLoading;
+
   return (
     <View style={styles.container}>
-      {fields !== null && submitLoading === false ? (
+      <View style={styles.header}>
+        <Text style={styles.title}>
+          category: <Text style={{ fontWeight: 600 }}>{category}</Text>
+        </Text>
+        <Button title="submit" style={styles.button} btnColor={Colors.success} onPress={handleFormSubmit} />
+      </View>
+      {isDataLoaded ? (
         <>
-          <ScrollView>{fields.map((field) => renderFormField(field))}</ScrollView>
-          <Button title="submit" onPress={() => handleFormSubmit()} />
+          <ScrollView>{fields.map(renderFormField)}</ScrollView>
+      <Button title="cancel" style={styles.backButton} btnColor={Colors.success} onPress={() => {navigation.goBack()}} />
         </>
       ) : (
         <ActivityIndicator size="large" color={Colors.primary} />
@@ -121,6 +155,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: "center",
+  },
+
+  header: {
+    flexDirection: "row",
+    backgroundColor: Colors.light_background,
+    paddingTop: 8,
+    paddingBottom: 15,
+    // paddingHorizontal: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  backButton: {
+    backgroundColor: Colors.secondary,
+  },
+  title: {
+    color: Colors.text,
   },
 });
 

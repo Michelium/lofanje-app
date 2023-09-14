@@ -7,7 +7,7 @@ import axiosInstance from "../../helpers/axios-helper";
 import EntryRow from "./EntryRow";
 import EntryModal from "./EntryModal";
 import Button from "../../common/Button";
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useFocusEffect } from '@react-navigation/core';
 
 const EntryList = ({ category, searchInput }) => {
   const navigation = useNavigation();
@@ -44,11 +44,16 @@ const EntryList = ({ category, searchInput }) => {
     }
   };
 
-  useEffect(() => {
-    setEntriesLoading(true);
-    getEntries();
-    getFields();
-  }, [category, searchInput]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setEntriesLoading(true);
+      getEntries();
+      getFields();
+      return () => {
+        // Any cleanup operation if needed when screen goes out of focus
+      };
+    }, [category, searchInput])
+  );
 
   return (
     <View style={styles.container}>

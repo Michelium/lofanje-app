@@ -4,7 +4,7 @@ import Button from "../../common/Button";
 import * as Colors from "../../config/colors";
 import { useNavigation } from '@react-navigation/core';
 
-const Header = ({category}) => {
+const Header = ({category, formSubmit}) => {
   const navigation = useNavigation();
 
   return (
@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     backgroundColor: Colors.light_background,
-    paddingTop: 15,
+    paddingTop: 8,
     paddingBottom: 15,
-    paddingHorizontal: 8,
+    // paddingHorizontal: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.text,
-    marginLeft: 10,
+    // marginLeft: 10,
   }
 });
 

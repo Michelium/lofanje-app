@@ -24,7 +24,6 @@ const EntryModal = ({ entry, setModalVisible, fields }) => {
             <ScrollView>
               <TouchableWithoutFeedback>
                 {fields.map((field) => {
-                  console.log(field, entry);
                   return (
                     <View style={styles.fieldRow} key={field.name}>
                       <Text style={styles.label}>{field.label}:</Text>

@@ -4,8 +4,8 @@ import * as Colors from "../../config/colors";
 import { Input, Text } from "@ui-kitten/components";
 
 const TextInput = (props) => {
-  const { label, updateFormData, field, ...inputProps } = props;
-
+  const { label, updateFormData, field, value, ...inputProps } = props;
+  
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}:</Text>}
@@ -17,6 +17,7 @@ const TextInput = (props) => {
         }}
         autoCapitalize="none"
         returnKeyType="default"
+        value={value}
         textStyle={{ fontWeight: "500" }}
       />
     </View>
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     marginBottom: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   label: {
     flex: 1,
