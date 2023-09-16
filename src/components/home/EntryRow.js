@@ -25,7 +25,7 @@ const EntryRow = ({ category, entry, setModalVisible, setModalEntry, reloadList 
       console.log("Response from server:", response);
 
       showMessage({
-        message: "entry deleted successfully",
+        message: "Entry deleted successfully",
         type: "success",
       });
       reloadList();

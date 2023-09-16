@@ -17,6 +17,7 @@ export const white = '#FFFFFF'; // White used for borders
 export const secondaryText = '#B0B0B0';  // A slightly dimmer text color for secondary text
 export const border = '#FFFFFF';  // Border color for inputs, cards, etc.
 export const buttonBackground = '#3C5BFA'; // Blue colour for button background
+export const inputBackground = '#1A2138'; // A dark blue colour used for the backgrounds of inputs
 export const notification = '#E53935';  // A contrasting red color, good for notifications or errors
 export const accent = '#9C27B0';  // A bold purple, good for buttons or accents
 export const secondaryAccent = '#BA68C8';  // A lighter shade of purple, suitable for secondary buttons or highlighted text
